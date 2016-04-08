@@ -13,7 +13,7 @@
 #include <stocksoup/tf/voice_hook>
 #include <stocksoup/tf/glow_model>
 
-#define PLUGIN_VERSION "0.0.1"
+#define PLUGIN_VERSION "0.0.2"
 public Plugin myinfo = {
     name = "[TF2] Building Radar",
     author = "nosoop",
@@ -49,22 +49,22 @@ public void OnClientDisconnect(int client) {
 public Action OnBuildingVoiceCommand(int client, TFVoiceCommand command) {
 	switch (command) {
 		case Voice_TeleporterHere: {
-			if (!IsOnBuildingGlowCooldown(client, BuildingGlow_Teleporter)) {
-				AttachTemporaryGlowsToBuiltEntities(client, "obj_teleporter");
+			if (!IsOnBuildingGlowCooldown(client, BuildingGlow_Teleporter)
+					&& AttachTemporaryGlowsToBuiltEntities(client, "obj_teleporter")) {
 				SetBuildingGlowCooldown(client, BuildingGlow_Teleporter);
 				return Plugin_Stop;
 			}
 		}
 		case Voice_DispenserHere: {
-			if (!IsOnBuildingGlowCooldown(client, BuildingGlow_Dispenser)) {
-				AttachTemporaryGlowsToBuiltEntities(client, "obj_dispenser");
+			if (!IsOnBuildingGlowCooldown(client, BuildingGlow_Dispenser)
+					&& AttachTemporaryGlowsToBuiltEntities(client, "obj_dispenser")) {
 				SetBuildingGlowCooldown(client, BuildingGlow_Dispenser);
 				return Plugin_Stop;
 			}
 		}
 		case Voice_SentryHere: {
-			if (!IsOnBuildingGlowCooldown(client, BuildingGlow_Sentry)) {
-				AttachTemporaryGlowsToBuiltEntities(client, "obj_sentrygun");
+			if (!IsOnBuildingGlowCooldown(client, BuildingGlow_Sentry)
+					&& AttachTemporaryGlowsToBuiltEntities(client, "obj_sentrygun")) {
 				SetBuildingGlowCooldown(client, BuildingGlow_Sentry);
 				return Plugin_Stop;
 			}
@@ -85,9 +85,10 @@ void ResetBuildingGlowCooldown(int client, BuildingGlowRequests glow) {
 	g_BuildingGlowCooldowns[client][glow] = 0.0;
 }
 
-void AttachTemporaryGlowsToBuiltEntities(int owner, const char[] class) {
+bool AttachTemporaryGlowsToBuiltEntities(int owner, const char[] class) {
 	int entity = -1;
 	
+	bool bAvailableBuildings = false;
 	while ( (entity = FindEntityByClassname(entity, class)) != -1 ) {
 		int hBuilder = GetEntPropEnt(entity, Prop_Send, "m_hBuilder");
 		if (hBuilder == owner) {
@@ -98,9 +99,11 @@ void AttachTemporaryGlowsToBuiltEntities(int owner, const char[] class) {
 				SDKHook(glow, SDKHook_SetTransmit, OnBuildingGlow);
 				
 				CreateTimer(g_flGlowDuration, OnBuildingGlowExpired, EntIndexToEntRef(glow));
+				bAvailableBuildings = true;
 			}
 		}
 	}
+	return bAvailableBuildings;
 }
 
 public Action OnBuildingGlowExpired(Handle timer, int glowref) {
