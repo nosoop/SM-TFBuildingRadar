@@ -9,15 +9,17 @@
 #include <sdktools>
 #include <sdkhooks>
 
+#include <tf2_stocks>
+
 #undef REQUIRE_PLUGIN
 #include <clientprefs>
 #define REQUIRE_PLUGIN
 
 #pragma newdecls required
 #include <stocksoup/tf/voice_hook>
-#include <stocksoup/tf/glow_model>
+#include <stocksoup/tf/entity_prefabs>
 
-#define PLUGIN_VERSION "0.1.0"
+#define PLUGIN_VERSION "0.1.1"
 public Plugin myinfo = {
     name = "[TF2] Building Radar",
     author = "nosoop",
@@ -103,7 +105,7 @@ bool AttachTemporaryGlowsToBuiltEntities(int owner, const char[] class) {
 	while ( (entity = FindEntityByClassname(entity, class)) != -1 ) {
 		int hBuilder = GetEntPropEnt(entity, Prop_Send, "m_hBuilder");
 		if (hBuilder == owner) {
-			int glow = AddGlowModel(entity, view_as<TFTeam>(GetClientTeam(owner)));
+			int glow = TF2_AttachBasicGlow(entity);
 			
 			if (IsValidEntity(glow)) {
 				SetEntPropEnt(glow, Prop_Send, "m_hOwnerEntity", owner);
