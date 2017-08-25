@@ -19,7 +19,7 @@
 #include <stocksoup/tf/voice_hook>
 #include <stocksoup/tf/entity_prefabs>
 
-#define PLUGIN_VERSION "0.1.2"
+#define PLUGIN_VERSION "0.1.3"
 public Plugin myinfo = {
     name = "[TF2] Building Radar",
     author = "nosoop",
@@ -124,14 +124,6 @@ bool AttachTemporaryGlowsToBuiltEntities(int owner, const char[] class) {
 		}
 	}
 	return bAvailableBuildings;
-}
-
-public Action OnBuildingGlowExpired(Handle timer, int glowref) {
-	int glow = EntRefToEntIndex(glowref);
-	
-	if (IsValidEntity(glow) && glow != INVALID_ENT_REFERENCE) {
-		AcceptEntityInput(glow, "Kill");
-	}
 }
 
 public Action OnBuildingGlow(int glow, int client) {
