@@ -19,7 +19,7 @@
 #include <stocksoup/tf/voice_hook>
 #include <stocksoup/tf/entity_prefabs>
 
-#define PLUGIN_VERSION "0.1.3"
+#define PLUGIN_VERSION "0.2.0"
 public Plugin myinfo = {
     name = "[TF2] Building Radar",
     author = "nosoop",
@@ -91,6 +91,7 @@ bool IsOnBuildingGlowCooldown(int client, BuildingGlowRequests glow) {
 }
 
 void SetBuildingGlowCooldown(int client, BuildingGlowRequests glow) {
+	ClientCommand(client, "playgamesound %s", "CYOA.NodeActivate");
 	g_BuildingGlowCooldowns[client][glow] = GetGameTime() + g_flGlowDuration;
 }
 
