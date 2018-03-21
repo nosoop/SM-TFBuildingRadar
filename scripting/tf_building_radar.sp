@@ -19,7 +19,7 @@
 #include <stocksoup/tf/voice_hook>
 #include <stocksoup/tf/entity_prefabs>
 
-#define PLUGIN_VERSION "0.2.0"
+#define PLUGIN_VERSION "0.2.1"
 public Plugin myinfo = {
     name = "[TF2] Building Radar",
     author = "nosoop",
@@ -131,6 +131,15 @@ public Action OnBuildingGlow(int glow, int client) {
 	int hOwner = GetEntPropEnt(glow, Prop_Send, "m_hOwnerEntity");
 	
 	if (hOwner == client) {
+		int hParent = GetEntPropEnt(glow, Prop_Data, "m_hParent");
+		
+		if (IsValidEntity(hParent)) {
+			int nParentModelIndex = GetEntProp(hParent, Prop_Send, "m_nModelIndex");
+			if (GetEntProp(glow, Prop_Send, "m_nModelIndex") != nParentModelIndex) {
+				SetEntProp(glow, Prop_Send, "m_nModelIndex", nParentModelIndex);
+			}
+		}
+		
 		return Plugin_Continue;
 	}
 	return Plugin_Handled;
