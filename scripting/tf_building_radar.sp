@@ -31,10 +31,11 @@ public Plugin myinfo = {
 enum BuildingGlowRequests {
 	BuildingGlow_Teleporter,
 	BuildingGlow_Dispenser,
-	BuildingGlow_Sentry
+	BuildingGlow_Sentry,
+	NUM_BUILDING_GLOW_REQUESTS
 };
 
-float g_BuildingGlowCooldowns[MAXPLAYERS+1][BuildingGlowRequests];
+float g_BuildingGlowCooldowns[MAXPLAYERS+1][NUM_BUILDING_GLOW_REQUESTS];
 
 float g_flGlowDuration = 10.0;
 
